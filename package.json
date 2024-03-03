@@ -1,7 +1,7 @@
 {
   "name": "dt-formatter",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "description": "A module designed to streamline the process of formatting Date() timestamps into human-readable date and time representations.",
   "main": "index.js",
   "scripts": {
