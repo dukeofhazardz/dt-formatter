@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "commonjs",
   "description": "A module designed to streamline the process of formatting Date() timestamps into human-readable date and time representations.",
-  "main": "index.js",
+  "main": "dist/lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
