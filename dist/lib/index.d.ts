@@ -9,6 +9,8 @@ export declare class DateTimeFormatter {
     private minutes;
     private seconds;
     constructor(timestamp?: string);
+    private formatDate;
+    private formatTime;
     date(dateStringFormat?: string): string;
     time(timeStringFormat?: string): string;
     format(dateStringFormat: string, timeStringFormat?: string): string;
