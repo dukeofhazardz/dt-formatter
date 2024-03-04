@@ -3,7 +3,10 @@
 import { padZero, getYear } from "./helper"
 
 export class DateTimeFormatter {
-  // Defines the DateTimeFormatter class
+  /**
+   * The DateTimeFormatter class facilitates the formatting of date and time values in various formats.
+   * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
+   */
 
   // Private Properties
   private datetime: Date
@@ -40,23 +43,26 @@ export class DateTimeFormatter {
     const dateSectionArray: string[] = []
 
     dateFormatStringArray.forEach(dateString => {
-      if (!["YYYY", "YY", "MMMM", "MM", "DD"].includes(dateString.toUpperCase())) {
-        throw new Error(`Invalid format specifier: ${dateString}`);
-      }
-      if ((dateString).toUpperCase() === "YYYY") {
-        dateSectionArray.push(padZero(this.fullYear))
-      }
-      if ((dateString).toUpperCase() === "YY") {
-        dateSectionArray.push(padZero(this.year))
-      }
-      if ((dateString).toUpperCase() === "MMMM") {
-        dateSectionArray.push(this.fullMonth)
-      }
-      if ((dateString).toUpperCase() === "MM") {
-        dateSectionArray.push(padZero(this.month))
-      }
-      if ((dateString).toUpperCase() === "DD") {
-        dateSectionArray.push(padZero(this.day))
+      switch(dateString.toUpperCase()) {
+        case "YYYY":
+          dateSectionArray.push(padZero(this.fullYear));
+          break;
+        case "YY":
+          dateSectionArray.push(padZero(this.year));
+          break;
+        case "MMMM":
+          dateSectionArray.push(this.fullMonth);
+          break;
+        case "MM":
+          dateSectionArray.push(padZero(this.month));
+          break;
+        case "DD":
+          dateSectionArray.push(padZero(this.day));
+          break;
+        default:
+          if (!["YYYY","YY", "MMMM", "MM", "DD"].includes(dateString.toUpperCase())) {
+            throw new Error(`Invalid format specifier: ${dateString}`);
+        }
       }
     });
     return dateSectionArray
@@ -70,17 +76,20 @@ export class DateTimeFormatter {
     const timeSectionArray: string[] = []
 
     timeFormatStringArray.forEach(timeString => {
-      if (!["hh", "mm", "ss"].includes(timeString.toLowerCase())) {
-        throw new Error(`Invalid format specifier: ${timeString}`);
-      }
-      if ((timeString).toLowerCase() === "hh") {
-        timeSectionArray.push(padZero(this.hours))
-      }
-      if ((timeString).toLowerCase() === "mm") {
-        timeSectionArray.push(padZero(this.minutes))
-      }
-      if ((timeString).toLowerCase() === "ss") {
-        timeSectionArray.push(padZero(this.seconds))
+      switch(timeString.toLowerCase()) {
+        case "hh":
+          timeSectionArray.push(padZero(this.hours))
+          break;
+        case "mm":
+          timeSectionArray.push(padZero(this.minutes))
+          break;
+        case "ss":
+          timeSectionArray.push(padZero(this.seconds))
+          break;
+        default:
+          if (!["hh", "mm", "ss"].includes(timeString.toLowerCase())) {
+            throw new Error(`Invalid format specifier: ${timeString}`);
+        }
       }
     });
     return timeSectionArray
@@ -157,6 +166,8 @@ export class DateTimeFormatter {
         throw new Error(`Invalid format specifier length: ${dateSectionArray.length}, expected 3`);
       }
       dateLiteral = `${dateSectionArray[0]}/${dateSectionArray[1]}/${dateSectionArray[2]}`
+    } else {
+      throw new Error("Expected a date string format")
     }
 
     if (timeStringFormat) {

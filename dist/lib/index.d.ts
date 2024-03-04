@@ -1,4 +1,8 @@
 export declare class DateTimeFormatter {
+    /**
+     * The DateTimeFormatter class facilitates the formatting of date and time values in various formats.
+     * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
+     */
     private datetime;
     private month;
     private fullMonth;
