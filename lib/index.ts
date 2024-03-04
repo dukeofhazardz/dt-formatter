@@ -1,6 +1,6 @@
-// A DateTimeFormater Module
+// A DateTimeFormatter Module
 
-import { padZero } from "./helper"
+import { padZero, getYear } from "./helper"
 
 export class DateTimeFormatter {
   // Defines the DateTimeFormatter class
@@ -8,8 +8,10 @@ export class DateTimeFormatter {
   // Private Properties
   private datetime: Date
   private month: number
+  private fullMonth: string
   private day: number
   private year: number
+  private fullYear: number
   private hours: number
   private minutes: number
   private seconds: number
@@ -21,8 +23,10 @@ export class DateTimeFormatter {
     */
     this.datetime = timestamp ? new Date(timestamp) : new Date()
     this.month = this.datetime.getMonth() + 1;
+    this.fullMonth = this.datetime.toLocaleString('en', { month: "long" });
     this.day = this.datetime.getDate();
     this.year = this.datetime.getFullYear();
+    this.fullYear = getYear(this.datetime.getFullYear())
     this.hours = this.datetime.getHours();
     this.minutes = this.datetime.getMinutes();
     this.seconds = this.datetime.getSeconds();
@@ -35,33 +39,39 @@ export class DateTimeFormatter {
     */
 
     if (dateStringFormat) {
-      try {
-        const formatStringArray = dateStringFormat.split(':') as string[]
-        const dateSectionArray: string[] = []
-
-        formatStringArray.forEach(dateString => {
-          if (!["YY", "MM", "DD"].includes(dateString.toUpperCase())) {
-            throw new Error(`Invalid format specifier: ${dateString}`);
-          }
-          if ((dateString).toUpperCase() === "YY") {
-            dateSectionArray.push(padZero(this.year))
-          }
-          if ((dateString).toUpperCase() === "MM") {
-            dateSectionArray.push(padZero(this.month))
-          }
-          if ((dateString).toUpperCase() === "DD") {
-            dateSectionArray.push(padZero(this.day))
-          }
-        });
-
-        if (dateSectionArray.length !== 3) {
-          throw new Error(`Invalid format specifier length: ${dateSectionArray.length}, expected 3`);
-        }
-        return `${dateSectionArray[0]}/${dateSectionArray[1]}/${dateSectionArray[2]}`
-        
-      } catch(error) {
-        console.error(error)
+      let dateFormatStringArray: string[] = []
+      if (dateStringFormat.includes(":")) {
+        dateFormatStringArray = dateStringFormat.split(':')
+      } else {
+        throw new Error("Date string format literal must be separated with ':'")
       }
+      const dateSectionArray: string[] = []
+
+      dateFormatStringArray.forEach(dateString => {
+        if (!["YYYY", "YY", "MMMM", "MM", "DD"].includes(dateString.toUpperCase())) {
+          throw new Error(`Invalid format specifier: ${dateString}`);
+        }
+        if ((dateString).toUpperCase() === "YYYY") {
+          dateSectionArray.push(padZero(this.fullYear))
+        }
+        if ((dateString).toUpperCase() === "YY") {
+          dateSectionArray.push(padZero(this.year))
+        }
+        if ((dateString).toUpperCase() === "MMMM") {
+          dateSectionArray.push(this.fullMonth)
+        }
+        if ((dateString).toUpperCase() === "MM") {
+          dateSectionArray.push(padZero(this.month))
+        }
+        if ((dateString).toUpperCase() === "DD") {
+          dateSectionArray.push(padZero(this.day))
+        }
+      });
+
+      if (dateSectionArray.length !== 3) {
+        throw new Error(`Invalid format specifier length: ${dateSectionArray.length}, expected 3`);
+      }
+      return `${dateSectionArray[0]}/${dateSectionArray[1]}/${dateSectionArray[2]}`
     }
     return `${padZero(this.day)}/${padZero(this.month)}/${this.year}`;
   }
@@ -73,34 +83,34 @@ export class DateTimeFormatter {
     */
 
     if (timeStringFormat) {
-      try {
-        const formatStringArray = timeStringFormat.split(':') as string[]
-        const timeSectionArray: string[] = []
-
-        formatStringArray.forEach(timeString => {
-          if (!["hh", "mm", "ss"].includes(timeString.toLowerCase())) {
-            throw new Error(`Invalid format specifier: ${timeString}`);
-          }
-          if ((timeString).toLowerCase() === "hh") {
-            timeSectionArray.push(padZero(this.hours))
-          }
-          if ((timeString).toLowerCase() === "mm") {
-            timeSectionArray.push(padZero(this.minutes))
-          }
-          if ((timeString).toLowerCase() === "ss") {
-            timeSectionArray.push(padZero(this.seconds))
-          }
-        });
-
-        if (timeSectionArray.length < 2 || timeSectionArray.length > 3) {
-          throw new Error(`Invalid format specifier length: ${timeSectionArray.length}, expected 2 or 3`);
-        }
-        
-        return timeSectionArray.length === 3 ? `${timeSectionArray[0]}:${timeSectionArray[1]}:${timeSectionArray[2]}` : `${timeSectionArray[0]}:${timeSectionArray[1]}`
-        
-      } catch(error) {
-        console.error(error)
+      let timeFormatStringArray: string[] = []
+      if (timeStringFormat.includes(":")) {
+        timeFormatStringArray = timeStringFormat.split(':')
+      } else {
+        throw new Error("Time string format literal must be separated with ':'")
       }
+      const timeSectionArray: string[] = []
+
+      timeFormatStringArray.forEach(timeString => {
+        if (!["hh", "mm", "ss"].includes(timeString.toLowerCase())) {
+          throw new Error(`Invalid format specifier: ${timeString}`);
+        }
+        if ((timeString).toLowerCase() === "hh") {
+          timeSectionArray.push(padZero(this.hours))
+        }
+        if ((timeString).toLowerCase() === "mm") {
+          timeSectionArray.push(padZero(this.minutes))
+        }
+        if ((timeString).toLowerCase() === "ss") {
+          timeSectionArray.push(padZero(this.seconds))
+        }
+      });
+
+      if (timeSectionArray.length < 2 || timeSectionArray.length > 3) {
+        throw new Error(`Invalid format specifier length: ${timeSectionArray.length}, expected 2 or 3`);
+      }
+        
+      return timeSectionArray.length === 3 ? `${timeSectionArray[0]}:${timeSectionArray[1]}:${timeSectionArray[2]}` : `${timeSectionArray[0]}:${timeSectionArray[1]}`
     }
     return `${padZero(this.hours)}:${padZero(this.minutes)}:${padZero(this.seconds)}`
   }
@@ -117,64 +127,65 @@ export class DateTimeFormatter {
     let timeLiteral: string = ""
     let dateLiteral: string = ""
     if (dateStringFormat) {
-      try {
-        const formatStringArray = dateStringFormat.split(':') as string[]
-        const dateSectionArray: string[] = []
-
-        formatStringArray.forEach(dateString => {
-          if (!["YY", "MM", "DD"].includes(dateString.toUpperCase())) {
-            throw new Error(`Invalid format specifier: ${dateString}`);
-          }
-          if ((dateString).toUpperCase() === "YY") {
-            dateSectionArray.push(padZero(this.year))
-          }
-          if ((dateString).toUpperCase() === "MM") {
-            dateSectionArray.push(padZero(this.month))
-          }
-          if ((dateString).toUpperCase() === "DD") {
-            dateSectionArray.push(padZero(this.day))
-          }
-        });
-
-        if (dateSectionArray.length !== 3) {
-          throw new Error(`Invalid format specifier length: ${dateSectionArray.length}, expected 3`);
-        }
-        dateLiteral = `${dateSectionArray[0]}/${dateSectionArray[1]}/${dateSectionArray[2]}`
-        
-      } catch(error) {
-        console.error(error)
+      let dateFormatStringArray: string[] = []
+      if (dateStringFormat.includes(":")) {
+        dateFormatStringArray = dateStringFormat.split(':')
+      } else {
+        throw new Error("Date string format literal must be separated with ':'")
       }
+      const dateSectionArray: string[] = []
+
+      dateFormatStringArray.forEach(dateString => {
+        if (!["YY", "MM", "DD"].includes(dateString.toUpperCase())) {
+          throw new Error(`Invalid format specifier: ${dateString}`);
+        }
+        if ((dateString).toUpperCase() === "YY") {
+          dateSectionArray.push(padZero(this.year))
+        }
+        if ((dateString).toUpperCase() === "MM") {
+          dateSectionArray.push(padZero(this.month))
+        }
+        if ((dateString).toUpperCase() === "DD") {
+          dateSectionArray.push(padZero(this.day))
+        }
+      });
+
+      if (dateSectionArray.length !== 3) {
+        throw new Error(`Invalid format specifier length: ${dateSectionArray.length}, expected 3`);
+      }
+      dateLiteral = `${dateSectionArray[0]}/${dateSectionArray[1]}/${dateSectionArray[2]}`
+
     }
 
     if (timeStringFormat) {
-      try {
-        const formatStringArray = timeStringFormat.split(':') as string[]
-        const timeSectionArray: string[] = []
-
-        formatStringArray.forEach(timeString => {
-          if (!["hh", "mm", "ss"].includes(timeString.toLowerCase())) {
-            throw new Error(`Invalid format specifier: ${timeString}`);
-          }
-          if ((timeString).toLowerCase() === "hh") {
-            timeSectionArray.push(padZero(this.hours))
-          }
-          if ((timeString).toLowerCase() === "mm") {
-            timeSectionArray.push(padZero(this.minutes))
-          }
-          if ((timeString).toLowerCase() === "ss") {
-            timeSectionArray.push(padZero(this.seconds))
-          }
-        });
-
-        if (timeSectionArray.length < 2 || timeSectionArray.length > 3) {
-          throw new Error(`Invalid format specifier length: ${timeSectionArray.length}, expected 2 or 3`);
-        }
-        
-        timeLiteral = timeSectionArray.length === 3 ? `${timeSectionArray[0]}:${timeSectionArray[1]}:${timeSectionArray[2]}` : `${timeSectionArray[0]}:${timeSectionArray[1]}`
-        
-      } catch(error) {
-        console.error(error)
+      let timeFormatStringArray: string[] = []
+      if (timeStringFormat.includes(":")) {
+        timeFormatStringArray = timeStringFormat.split(':')
+      } else {
+        throw new Error("Time string format literal must be separated with ':'")
       }
+      const timeSectionArray: string[] = []
+
+      timeFormatStringArray.forEach(timeString => {
+        if (!["hh", "mm", "ss"].includes(timeString.toLowerCase())) {
+          throw new Error(`Invalid format specifier: ${timeString}`);
+        }
+        if ((timeString).toLowerCase() === "hh") {
+          timeSectionArray.push(padZero(this.hours))
+        }
+        if ((timeString).toLowerCase() === "mm") {
+          timeSectionArray.push(padZero(this.minutes))
+        }
+        if ((timeString).toLowerCase() === "ss") {
+          timeSectionArray.push(padZero(this.seconds))
+        }
+      });
+
+      if (timeSectionArray.length < 2 || timeSectionArray.length > 3) {
+        throw new Error(`Invalid format specifier length: ${timeSectionArray.length}, expected 2 or 3`);
+      }
+        
+      timeLiteral = timeSectionArray.length === 3 ? `${timeSectionArray[0]}:${timeSectionArray[1]}:${timeSectionArray[2]}` : `${timeSectionArray[0]}:${timeSectionArray[1]}`
     }
 
     let formattedDateTime: string = ""

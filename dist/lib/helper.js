@@ -1,14 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.timeeFormatting = exports.dateFormatting = exports.padZero = void 0;
+exports.getYear = exports.padZero = void 0;
 const padZero = (value) => {
     // A helper function that ensures that each component of the date has two digits, with leading zeros if necessary.
     return String(value).padStart(2, '0');
 };
 exports.padZero = padZero;
-const dateFormatting = (dateStringFormat) => {
+const getYear = (year) => {
+    // Returns the last two digits of the year
+    return year % 100;
 };
-exports.dateFormatting = dateFormatting;
-const timeeFormatting = (timeStringFormat) => {
-};
-exports.timeeFormatting = timeeFormatting;
+exports.getYear = getYear;
