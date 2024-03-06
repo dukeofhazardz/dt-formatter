@@ -75,6 +75,19 @@ You can also provide additional options to control the formatting behavior:
 - `timestamp`: An optional timestamp to format. It can be a Date object, a string, or a number.
 - `prefixZero`: An optional boolean value to toggle the prefixing of '0' before a single digit in the formatted output.
 
+## Format String Table
+
+| Format String | Output Description                              |
+|---------------|-------------------------------------------------|
+| YYYY          | Full year (e.g., 2024)                          |
+| YY            | Last two digits of the year (e.g., 24)          |
+| MMMM          | Full month name (e.g., January)                 |
+| MM            | Month with leading zero (e.g., 01 for January)  |
+| DD            | Day of the month with leading zero (e.g., 01)   |
+| hh            | Hour with leading zero (e.g., 08 for 8 AM)      |
+| mm            | Minutes with leading zero (e.g., 05)            |
+| ss            | Seconds with leading zero (e.g., 03)            |
+
 
 ## Testing
 

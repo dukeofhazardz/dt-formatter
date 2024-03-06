@@ -18,8 +18,8 @@ export class DateTimeFormatter {
     const month = datetime.getMonth() + 1;
     const fullMonth = datetime.toLocaleString('en', { month: "long" });
     const day = datetime.getDate();
-    const year = datetime.getFullYear();
-    const fullYear = getYear(datetime.getFullYear())
+    const year = getYear(datetime.getFullYear())
+    const fullYear = datetime.getFullYear();
 
     const dateSectionArray: string[] = []
 

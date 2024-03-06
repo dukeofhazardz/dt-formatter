@@ -17,6 +17,7 @@ describe('DateTimeFormatter', () => {
       expect(formatter.date({timestamp: timestamp, prefixZero: true})).toEqual('05/03/2024');
       expect(formatter.date({timestamp: timestamp, prefixZero: false})).toEqual('5/3/2024');
       expect(formatter.time({timestamp: timestamp})).toEqual('12:30:45');
+      expect(formatter.time({timeFormat: "hh:mm", timestamp: timestamp})).toEqual('12:20');
     });
   });
 });
