@@ -96,10 +96,10 @@ export class DateTimeFormatter {
 
     if (dateFormat) {
       let dateFormatStringArray: string[] = []
-      if (dateFormat.includes(":")) {
-        dateFormatStringArray = dateFormat.split(':')
+      if (dateFormat.includes("-")) {
+        dateFormatStringArray = dateFormat.split('-')
       } else {
-        throw new Error("Date string format literal must be separated with ':'")
+        throw new Error("Date string format literal must be separated with '-'")
       }
       const dateSectionArray: string[] = this.formatDate(dateFormatStringArray, timestamp, prefixZero)
 
@@ -155,10 +155,10 @@ export class DateTimeFormatter {
 
     if (dateFormat) {
       let dateFormatStringArray: string[] = []
-      if (dateFormat.includes(":")) {
-        dateFormatStringArray = dateFormat.split(':')
+      if (dateFormat.includes("-")) {
+        dateFormatStringArray = dateFormat.split('-')
       } else {
-        throw new Error("Date string format literal must be separated with ':'")
+        throw new Error("Date string format literal must be separated with '-'")
       }
       const dateSectionArray: string[] = this.formatDate(dateFormatStringArray, timestamp, prefixZero)
 

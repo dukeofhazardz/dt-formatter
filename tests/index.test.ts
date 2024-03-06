@@ -2,8 +2,8 @@ import { DateTimeFormatter } from "../lib";
 import { padZero } from "../lib/helper";
 
 describe('DateTimeFormatter', () => {
-  describe('constructor', () => {
-    it("should create a DateTimeFormatter instance with the current date if no timestamp is provided", () => {
+  describe('dateAndTime', () => {
+    it("should return the current date if no timestamp is provided", () => {
       const formatter = DateTimeFormatter;
       const currentDate = new Date();
       expect(formatter.date()).toEqual(`${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`);
@@ -16,8 +16,9 @@ describe('DateTimeFormatter', () => {
       expect(formatter.date({timestamp: timestamp})).toEqual('5/3/2024');
       expect(formatter.date({timestamp: timestamp, prefixZero: true})).toEqual('05/03/2024');
       expect(formatter.date({timestamp: timestamp, prefixZero: false})).toEqual('5/3/2024');
+      expect(formatter.date({dateFormat: "YY-MM-DD", timestamp: timestamp, prefixZero: true})).toEqual('24/03/05')
       expect(formatter.time({timestamp: timestamp})).toEqual('12:30:45');
-      expect(formatter.time({timeFormat: "hh:mm", timestamp: timestamp})).toEqual('12:20');
+      expect(formatter.time({timeFormat: "hh:mm", timestamp: timestamp})).toEqual('12:30');
     });
   });
 });
