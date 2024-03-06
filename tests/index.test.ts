@@ -13,10 +13,10 @@ describe('DateTimeFormatter', () => {
     it('should create a DateTimeFormatter instance with the provided timestamp', () => {
       const timestamp = '2024-03-05T12:30:45';
       const formatter = DateTimeFormatter;
-      expect(formatter.date("", timestamp)).toEqual('5/3/2024');
-      expect(formatter.date("", timestamp, {prefixZero: true})).toEqual('05/03/2024');
-      expect(formatter.date("", timestamp, {prefixZero: false})).toEqual('5/3/2024');
-      expect(formatter.time("", timestamp)).toEqual('12:30:45');
+      expect(formatter.date({timestamp: timestamp})).toEqual('5/3/2024');
+      expect(formatter.date({timestamp: timestamp, prefixZero: true})).toEqual('05/03/2024');
+      expect(formatter.date({timestamp: timestamp, prefixZero: false})).toEqual('5/3/2024');
+      expect(formatter.time({timestamp: timestamp})).toEqual('12:30:45');
     });
   });
 });
