@@ -2,17 +2,16 @@
 // A DateTimeFormatter Module
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DateTimeFormatter = void 0;
-const helper_1 = require("./helper");
+const helper_1 = require("./lib/helper");
 class DateTimeFormatter {
     /**
      * The DateTimeFormatter class facilitates the formatting of date and time values in various formats.
+     * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
      */
-    static formatDate(dateFormatStringArray, timestamp, flags) {
+    formatDate(dateFormatStringArray, timestamp, flags) {
         /**
          * Returns a string[] containing the formatted date
          * @param dateFormatStringArray An array containing the string format for the date.
-         * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
-         * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
         */
         const datetime = timestamp ? new Date(timestamp) : new Date();
         const month = datetime.getMonth() + 1;
@@ -24,19 +23,19 @@ class DateTimeFormatter {
         dateFormatStringArray.forEach(dateString => {
             switch (dateString.toUpperCase()) {
                 case "YYYY":
-                    dateSectionArray.push((flags === null || flags === void 0 ? void 0 : flags.prefixZero) ? (0, helper_1.padZero)(fullYear) : (fullYear).toString());
+                    dateSectionArray.push(flags ? (0, helper_1.padZero)(fullYear) : (fullYear).toString());
                     break;
                 case "YY":
-                    dateSectionArray.push((flags === null || flags === void 0 ? void 0 : flags.prefixZero) ? (0, helper_1.padZero)(year) : (year).toString());
+                    dateSectionArray.push(flags ? (0, helper_1.padZero)(year) : (year).toString());
                     break;
                 case "MMMM":
                     dateSectionArray.push(fullMonth);
                     break;
                 case "MM":
-                    dateSectionArray.push((flags === null || flags === void 0 ? void 0 : flags.prefixZero) ? (0, helper_1.padZero)(month) : (month).toString());
+                    dateSectionArray.push(flags ? (0, helper_1.padZero)(month) : (month).toString());
                     break;
                 case "DD":
-                    dateSectionArray.push((flags === null || flags === void 0 ? void 0 : flags.prefixZero) ? (0, helper_1.padZero)(day) : (day).toString());
+                    dateSectionArray.push(flags ? (0, helper_1.padZero)(day) : (day).toString());
                     break;
                 default:
                     if (!["YYYY", "YY", "MMMM", "MM", "DD"].includes(dateString.toUpperCase())) {
@@ -46,12 +45,10 @@ class DateTimeFormatter {
         });
         return dateSectionArray;
     }
-    static formatTime(timeFormatStringArray, timestamp, flags) {
+    formatTime(timeFormatStringArray, timestamp, flags) {
         /**
          * Returns a string[] containing the formatted time
          * @param timeFormatStringArray An array containing the string format for the time.
-         * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
-         * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
         */
         const datetime = timestamp ? new Date(timestamp) : new Date();
         const hours = datetime.getHours();
@@ -61,13 +58,13 @@ class DateTimeFormatter {
         timeFormatStringArray.forEach(timeString => {
             switch (timeString.toLowerCase()) {
                 case "hh":
-                    timeSectionArray.push((flags === null || flags === void 0 ? void 0 : flags.prefixZero) ? (0, helper_1.padZero)(hours) : (hours).toString());
+                    timeSectionArray.push(flags ? (0, helper_1.padZero)(hours) : (hours).toString());
                     break;
                 case "mm":
-                    timeSectionArray.push((flags === null || flags === void 0 ? void 0 : flags.prefixZero) ? (0, helper_1.padZero)(minutes) : (minutes).toString());
+                    timeSectionArray.push(flags ? (0, helper_1.padZero)(minutes) : (minutes).toString());
                     break;
                 case "ss":
-                    timeSectionArray.push((flags === null || flags === void 0 ? void 0 : flags.prefixZero) ? (0, helper_1.padZero)(seconds) : (seconds).toString());
+                    timeSectionArray.push(flags ? (0, helper_1.padZero)(seconds) : (seconds).toString());
                     break;
                 default:
                     if (!["hh", "mm", "ss"].includes(timeString.toLowerCase())) {
@@ -77,12 +74,10 @@ class DateTimeFormatter {
         });
         return timeSectionArray;
     }
-    static date(dateStringFormat, timestamp, flags) {
+    date(dateStringFormat, timestamp, flags) {
         /**
          * Returns a formatted date string
          * @param dateStringFormat The format for the time (optional).
-         * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
-         * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
         */
         const datetime = timestamp ? new Date(timestamp) : new Date();
         if (dateStringFormat) {
@@ -99,14 +94,12 @@ class DateTimeFormatter {
             }
             return `${dateSectionArray[0]}/${dateSectionArray[1]}/${dateSectionArray[2]}`;
         }
-        return `${(flags === null || flags === void 0 ? void 0 : flags.prefixZero) ? (0, helper_1.padZero)(datetime.getDate()) : datetime.getDate()}/${(flags === null || flags === void 0 ? void 0 : flags.prefixZero) ? (0, helper_1.padZero)(datetime.getMonth() + 1) : datetime.getMonth() + 1}/${datetime.getFullYear()}`;
+        return `${(0, helper_1.padZero)(datetime.getDate())}/${(0, helper_1.padZero)(datetime.getMonth() + 1)}/${datetime.getFullYear()}`;
     }
-    static time(timeStringFormat, timestamp, flags) {
+    time(timeStringFormat, timestamp, flags) {
         /**
          * Returns a formatted time string
          * @param timeStringFormat The format for the time (optional).
-         * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
-         * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
         */
         const datetime = timestamp ? new Date(timestamp) : new Date();
         if (timeStringFormat) {
@@ -123,15 +116,13 @@ class DateTimeFormatter {
             }
             return timeSectionArray.length === 3 ? `${timeSectionArray[0]}:${timeSectionArray[1]}:${timeSectionArray[2]}` : `${timeSectionArray[0]}:${timeSectionArray[1]}`;
         }
-        return `${flags ? (0, helper_1.padZero)(datetime.getHours()) : datetime.getHours()}:${flags ? (0, helper_1.padZero)(datetime.getMinutes()) : datetime.getMinutes()}:${flags ? (0, helper_1.padZero)(datetime.getSeconds()) : datetime.getSeconds()}`;
+        return `${(0, helper_1.padZero)(datetime.getHours())}:${(0, helper_1.padZero)(datetime.getMinutes())}:${(0, helper_1.padZero)(datetime.getSeconds())}`;
     }
-    static format(dateStringFormat, timeStringFormat, timestamp, flags) {
+    format(dateStringFormat, timeStringFormat, timestamp, flags) {
         /**
          * Returns a formatted date or date-time string
          * @param dateStringFormat The format for the date.
          * @param timeStringFormat The format for the time (optional).
-         * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
-         * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
         */
         if (!dateStringFormat && !timeStringFormat) {
             throw new Error('At least one argument must be provided.');

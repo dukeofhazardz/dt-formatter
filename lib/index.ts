@@ -5,59 +5,40 @@ import { padZero, getYear } from "./helper"
 export class DateTimeFormatter {
   /**
    * The DateTimeFormatter class facilitates the formatting of date and time values in various formats.
-   * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
    */
 
-  // Private Properties
-  private datetime: Date
-  private month: number
-  private fullMonth: string
-  private day: number
-  private year: number
-  private fullYear: number
-  private hours: number
-  private minutes: number
-  private seconds: number
-
-  constructor(timestamp?: string) {
-    /**
-     * Initializes the DateTimeFormatter class
-     * @param timestamp The user date-string argument for date-time (optional).
-    */
-    this.datetime = timestamp ? new Date(timestamp) : new Date()
-    this.month = this.datetime.getMonth() + 1;
-    this.fullMonth = this.datetime.toLocaleString('en', { month: "long" });
-    this.day = this.datetime.getDate();
-    this.year = this.datetime.getFullYear();
-    this.fullYear = getYear(this.datetime.getFullYear())
-    this.hours = this.datetime.getHours();
-    this.minutes = this.datetime.getMinutes();
-    this.seconds = this.datetime.getSeconds();
-  }
-
-  private formatDate(dateFormatStringArray: string[]) {
+  private static formatDate(dateFormatStringArray: string[], timestamp?: string, flags?: {prefixZero: boolean}) {
     /**
      * Returns a string[] containing the formatted date
      * @param dateFormatStringArray An array containing the string format for the date.
+     * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
+     * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
     */
+    const datetime = timestamp ? new Date(timestamp) : new Date()
+    const month = datetime.getMonth() + 1;
+    const fullMonth = datetime.toLocaleString('en', { month: "long" });
+    const day = datetime.getDate();
+    const year = datetime.getFullYear();
+    const fullYear = getYear(datetime.getFullYear())
+
     const dateSectionArray: string[] = []
 
     dateFormatStringArray.forEach(dateString => {
       switch(dateString.toUpperCase()) {
         case "YYYY":
-          dateSectionArray.push(padZero(this.fullYear));
+          dateSectionArray.push(flags?.prefixZero ? padZero(fullYear) : (fullYear).toString());
           break;
         case "YY":
-          dateSectionArray.push(padZero(this.year));
+          dateSectionArray.push(flags?.prefixZero ? padZero(year) : (year).toString());
           break;
         case "MMMM":
-          dateSectionArray.push(this.fullMonth);
+          dateSectionArray.push(fullMonth);
           break;
         case "MM":
-          dateSectionArray.push(padZero(this.month));
+          dateSectionArray.push(flags?.prefixZero ? padZero(month) : (month).toString());
           break;
         case "DD":
-          dateSectionArray.push(padZero(this.day));
+          dateSectionArray.push(flags?.prefixZero ? padZero(day) : (day).toString());
           break;
         default:
           if (!["YYYY","YY", "MMMM", "MM", "DD"].includes(dateString.toUpperCase())) {
@@ -68,23 +49,30 @@ export class DateTimeFormatter {
     return dateSectionArray
   }
   
-  private formatTime(timeFormatStringArray: string[]) {
+  private static formatTime(timeFormatStringArray: string[], timestamp?: string, flags?: {prefixZero: boolean}) {
     /**
      * Returns a string[] containing the formatted time
      * @param timeFormatStringArray An array containing the string format for the time.
+     * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
+     * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
     */
+    const datetime = timestamp ? new Date(timestamp) : new Date()
+    const hours = datetime.getHours();
+    const minutes = datetime.getMinutes();
+    const seconds = datetime.getSeconds();
+
     const timeSectionArray: string[] = []
 
     timeFormatStringArray.forEach(timeString => {
       switch(timeString.toLowerCase()) {
         case "hh":
-          timeSectionArray.push(padZero(this.hours))
+          timeSectionArray.push(flags?.prefixZero ? padZero(hours) : (hours).toString())
           break;
         case "mm":
-          timeSectionArray.push(padZero(this.minutes))
+          timeSectionArray.push(flags?.prefixZero ? padZero(minutes): (minutes).toString())
           break;
         case "ss":
-          timeSectionArray.push(padZero(this.seconds))
+          timeSectionArray.push(flags?.prefixZero ? padZero(seconds) : (seconds).toString())
           break;
         default:
           if (!["hh", "mm", "ss"].includes(timeString.toLowerCase())) {
@@ -94,12 +82,15 @@ export class DateTimeFormatter {
     });
     return timeSectionArray
   }
-
-  date(dateStringFormat?: string) {
+  
+  static date(dateStringFormat?: string, timestamp?: string, flags?: {prefixZero: boolean}) {
     /**
      * Returns a formatted date string
      * @param dateStringFormat The format for the time (optional).
+     * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
+     * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
     */
+    const datetime = timestamp ? new Date(timestamp) : new Date()
 
     if (dateStringFormat) {
       let dateFormatStringArray: string[] = []
@@ -108,21 +99,24 @@ export class DateTimeFormatter {
       } else {
         throw new Error("Date string format literal must be separated with ':'")
       }
-      const dateSectionArray: string[] = this.formatDate(dateFormatStringArray)
+      const dateSectionArray: string[] = this.formatDate(dateFormatStringArray, timestamp, flags)
 
       if (dateSectionArray.length !== 3) {
         throw new Error(`Invalid format specifier length: ${dateSectionArray.length}, expected 3`);
       }
       return `${dateSectionArray[0]}/${dateSectionArray[1]}/${dateSectionArray[2]}`
     }
-    return `${padZero(this.day)}/${padZero(this.month)}/${this.year}`;
+    return `${flags?.prefixZero ? padZero(datetime.getDate()) : datetime.getDate()}/${flags?.prefixZero ? padZero(datetime.getMonth() + 1) : datetime.getMonth() + 1}/${datetime.getFullYear()}`;
   }
 
-  time(timeStringFormat?: string) {
+  static time(timeStringFormat?: string, timestamp?: string, flags?: {prefixZero: boolean}) {
     /**
      * Returns a formatted time string
      * @param timeStringFormat The format for the time (optional).
+     * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
+     * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
     */
+    const datetime = timestamp ? new Date(timestamp) : new Date()
 
     if (timeStringFormat) {
       let timeFormatStringArray: string[] = []
@@ -131,7 +125,7 @@ export class DateTimeFormatter {
       } else {
         throw new Error("Time string format literal must be separated with ':'")
       }
-      const timeSectionArray: string[] = this.formatTime(timeFormatStringArray)
+      const timeSectionArray: string[] = this.formatTime(timeFormatStringArray, timestamp, flags)
 
       if (timeSectionArray.length < 2 || timeSectionArray.length > 3) {
         throw new Error(`Invalid format specifier length: ${timeSectionArray.length}, expected 2 or 3`);
@@ -139,15 +133,18 @@ export class DateTimeFormatter {
         
       return timeSectionArray.length === 3 ? `${timeSectionArray[0]}:${timeSectionArray[1]}:${timeSectionArray[2]}` : `${timeSectionArray[0]}:${timeSectionArray[1]}`
     }
-    return `${padZero(this.hours)}:${padZero(this.minutes)}:${padZero(this.seconds)}`
+    return `${flags?.prefixZero ? padZero(datetime.getHours()) : datetime.getHours()}:${flags?.prefixZero ? padZero(datetime.getMinutes()) : datetime.getMinutes()}:${flags?.prefixZero ? padZero(datetime.getSeconds()) : datetime.getSeconds()}`
   }
 
-  format(dateStringFormat: string, timeStringFormat?: string) {
+  static format(dateStringFormat: string, timeStringFormat?: string, timestamp?: string, flags?: {prefixZero: boolean}) {
     /**
      * Returns a formatted date or date-time string
      * @param dateStringFormat The format for the date.
      * @param timeStringFormat The format for the time (optional).
+     * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
+     * @param flag An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
     */
+
     if (!dateStringFormat && !timeStringFormat) {
       throw new Error('At least one argument must be provided.');
     }
@@ -160,7 +157,7 @@ export class DateTimeFormatter {
       } else {
         throw new Error("Date string format literal must be separated with ':'")
       }
-      const dateSectionArray: string[] = this.formatDate(dateFormatStringArray)
+      const dateSectionArray: string[] = this.formatDate(dateFormatStringArray, timestamp, flags)
 
       if (dateSectionArray.length !== 3) {
         throw new Error(`Invalid format specifier length: ${dateSectionArray.length}, expected 3`);
@@ -177,7 +174,7 @@ export class DateTimeFormatter {
       } else {
         throw new Error("Time string format literal must be separated with ':'")
       }
-      const timeSectionArray: string[] = this.formatTime(timeFormatStringArray)
+      const timeSectionArray: string[] = this.formatTime(timeFormatStringArray, timestamp, flags)
 
       if (timeSectionArray.length < 2 || timeSectionArray.length > 3) {
         throw new Error(`Invalid format specifier length: ${timeSectionArray.length}, expected 2 or 3`);
