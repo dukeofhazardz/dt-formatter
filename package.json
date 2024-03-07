@@ -15,7 +15,8 @@
     "url": "git+https://github.com/dukeofhazardz/dt-formatter.git"
   },
   "author": "Nnaemeka Daniel John",
-  "license": "ISC",
+  "license": "MIT",
+  "files": ["dist", "LICENSE", "README.md", "package.json"],
   "bugs": {
     "url": "https://github.com/dukeofhazardz/dt-formatter/issues"
   },

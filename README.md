@@ -9,7 +9,7 @@ The **DateTimeFormatter** module provides a convenient way to format dates and t
 To use the **DateTimeFormatter** module, you can install it via npm:
 
 ```bash
-npm install @your-namespace/datetime-formatter
+npm install dt-formatter
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npm install @your-namespace/datetime-formatter
 ### Importing
 
 ```javascript
-import { DateTimeFormatter } from '@your-namespace/datetime-formatter';
+import { DateTimeFormatter } from 'dt-formatter';
 ```
 
 ### Formatting Dates
