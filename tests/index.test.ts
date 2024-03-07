@@ -38,6 +38,9 @@ describe('DateTimeFormatter', () => {
       expect(() => DateTimeFormatter.time({timeFormat: "YY:MM:DD"})).toThrow(new Error('Invalid format specifier: YY'));
       expect(() => DateTimeFormatter.date({dateFormat: "yy-hh-dd"})).toThrow(new Error('Invalid format specifier: hh'));
       expect(() => DateTimeFormatter.time({timeFormat: "hh:MM:dd"})).toThrow(new Error('Invalid format specifier: dd'));
+      expect(() => DateTimeFormatter.format({dateFormat:"yy-mm-dd", timeFormat: "hh:MM:dd"})).toThrow(new Error('Invalid format specifier: dd'));
+      expect(() => DateTimeFormatter.format({dateFormat: "yy-hh-dd", timeFormat: "hh:mm:ss"})).toThrow(new Error('Invalid format specifier: hh'));
+      expect(() => DateTimeFormatter.format({dateFormat: "yy-hh-dd", timeFormat: "YY:MM:DD"})).toThrow(new Error('Invalid format specifier: hh'));
     });
 
     it("should return an error if an invalid string format separator is passed", () => {
@@ -45,6 +48,18 @@ describe('DateTimeFormatter', () => {
       expect(() => DateTimeFormatter.time({timeFormat: "HH-MM-SS"})).toThrow(new Error("Time string format literal must be separated with ':'"));
       expect(() => DateTimeFormatter.date({dateFormat: "jdjsjvsi"})).toThrow(new Error("Date string format literal must be separated with '-'"));
       expect(() => DateTimeFormatter.time({timeFormat: "jvjsvvn"})).toThrow(new Error("Time string format literal must be separated with ':'"));
+      expect(() => DateTimeFormatter.format({timeFormat: "hh:mm:ss", dateFormat: "YY:MM:DD"})).toThrow(new Error("Date string format literal must be separated with '-'"));
+      expect(() => DateTimeFormatter.format({timeFormat: "hh-mm-ss", dateFormat: "YY:MM:DD"})).toThrow(new Error("Date string format literal must be separated with '-'"));
+      expect(() => DateTimeFormatter.format({dateFormat: "YY-MM-DD", timeFormat: "hh-mm-ss"})).toThrow(new Error("Time string format literal must be separated with ':'"));
+    });
+
+    it("should return an error when more than 3 string formats are passed", () => {
+      expect(() => DateTimeFormatter.date({dateFormat: "YY-MM-DD-DD"})).toThrow(new Error("Invalid format specifier length: 4, expected 3"));
+      expect(() => DateTimeFormatter.time({timeFormat: "HH:MM:SS:hh"})).toThrow(new Error("Invalid format specifier length: 4, expected 2 or 3"));
+      expect(() => DateTimeFormatter.date({dateFormat: "DD-MM-DD-YYYY-mm"})).toThrow(new Error("Invalid format specifier length: 5, expected 3"));
+      expect(() => DateTimeFormatter.time({timeFormat: "hh:mm:ss:hh:ss"})).toThrow(new Error("Invalid format specifier length: 5, expected 2 or 3"));
+      expect(() => DateTimeFormatter.format({timeFormat: "hh:mm:ss:hh:ss", dateFormat: "YY-MM-DD-DD"})).toThrow(new Error("Invalid format specifier length: 4, expected 3"));
+      expect(() => DateTimeFormatter.format({dateFormat: "YY-MM-DD", timeFormat: "HH:MM:SS:hh"})).toThrow(new Error("Invalid format specifier length: 4, expected 2 or 3"));
     });
   });
 });

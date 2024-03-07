@@ -4,7 +4,9 @@
   "type": "commonjs",
   "description": "A module designed to streamline the process of formatting Date() timestamps into human-readable date and time representations.",
   "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
   "scripts": {
+    "prepublish": "npm run build",
     "test": "jest",
     "build": "tsc"
   },
