@@ -1,4 +1,5 @@
 import { DateTimeFormatter } from "../lib";
+import { padZero } from "../lib/helper";
 
 describe('DateTimeFormatter', () => {
   describe('dateTimeAndFormat', () => {
@@ -24,14 +25,26 @@ describe('DateTimeFormatter', () => {
       expect(formatter.format({timestamp: timestamp, dateFormat:"YY-MM-DD", prefixZero: true})).toEqual('24/03/05 12:30:45');
     });
 
-    it("should return an error if an invalid format specifier is passed", () => {
+    it("should return the expected date or time when only prefixZero is passed", () => {
       const formatter = DateTimeFormatter;
-      expect(formatter.date({dateFormat: "hh:mm:ss"})).toThrow(new Error('Invalid format specifier: "hh:mm:ss"'))
+      const currentDate = new Date();
+      expect(formatter.date({prefixZero: true})).toEqual(`${padZero(currentDate.getDate())}/${padZero(currentDate.getMonth() + 1)}/${padZero(currentDate.getFullYear())}`);
+      expect(formatter.time({prefixZero: true})).toEqual(`${padZero(currentDate.getHours())}:${padZero(currentDate.getMinutes())}:${padZero(currentDate.getSeconds())}`);
+      expect(formatter.format({prefixZero: true})).toEqual(`${padZero(currentDate.getDate())}/${padZero(currentDate.getMonth() + 1)}/${padZero(currentDate.getFullYear())} ${padZero(currentDate.getHours())}:${padZero(currentDate.getMinutes())}:${padZero(currentDate.getSeconds())}`);
+    });
+
+    it("should return an error if an invalid format specifier is passed", () => {
+      expect(() => DateTimeFormatter.date({dateFormat: "hh-mm-ss"})).toThrow(new Error('Invalid format specifier: hh'));
+      expect(() => DateTimeFormatter.time({timeFormat: "YY:MM:DD"})).toThrow(new Error('Invalid format specifier: YY'));
+      expect(() => DateTimeFormatter.date({dateFormat: "yy-hh-dd"})).toThrow(new Error('Invalid format specifier: hh'));
+      expect(() => DateTimeFormatter.time({timeFormat: "hh:MM:dd"})).toThrow(new Error('Invalid format specifier: dd'));
     });
 
     it("should return an error if an invalid string format separator is passed", () => {
-      const formatter = DateTimeFormatter;
-      expect(formatter.date({dateFormat: "YY:MM:DD"})).toThrow(new Error("Date string format literal must be separated with '-'"))
+      expect(() => DateTimeFormatter.date({dateFormat: "YY:MM:DD"})).toThrow(new Error("Date string format literal must be separated with '-'"));
+      expect(() => DateTimeFormatter.time({timeFormat: "HH-MM-SS"})).toThrow(new Error("Time string format literal must be separated with ':'"));
+      expect(() => DateTimeFormatter.date({dateFormat: "jdjsjvsi"})).toThrow(new Error("Date string format literal must be separated with '-'"));
+      expect(() => DateTimeFormatter.time({timeFormat: "jvjsvvn"})).toThrow(new Error("Time string format literal must be separated with ':'"));
     });
   });
 });
