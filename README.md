@@ -26,14 +26,15 @@ You can format dates using the `date` method:
 
 ```javascript
 // Format the current date in the default format (DD/MM/YYYY)
-const formattedDate = DateTimeFormatter.date();
+const formattedDate = DateTimeFormatter.date(); // returns '5/3/2024'
 ```
 
 You can also specify a custom date format:
 
 ```javascript
-// Format the current date in the custom format (YYYY-MM-DD)
-const formattedDate = DateTimeFormatter.date({ dateFormat: 'YYYY-MM-DD' });
+// Format the current date in the custom format (YYYY-MM-DD) must be separated with a '-'
+const formattedDate = DateTimeFormatter.date({ dateFormat: 'YYYY-MM-DD' }); // returns '2024/3/5'
+const formattedDate = DateTimeFormatter.date({ dateFormat: 'YY-MM-DD', prefixZero: true }); // returns '24/03/05'
 ```
 
 ### Formatting Times
@@ -42,14 +43,15 @@ Similarly, you can format times using the `time` method:
 
 ```javascript
 // Format the current time in the default format (HH:MM:SS)
-const formattedTime = DateTimeFormatter.time();
+const formattedTime = DateTimeFormatter.time(); // returns '12:30:45'
 ```
 
 You can customize the time format as well:
 
 ```javascript
-// Format the current time in the custom format (HH:MM)
-const formattedTime = DateTimeFormatter.time({ timeFormat: 'HH:MM' });
+// Format the current time in the custom format (HH:MM) must be separated with a ':'
+const formattedTime = DateTimeFormatter.time({ timeFormat: 'HH:MM' }); // returns '12:30'
+const formattedTime = DateTimeFormatter.time({ timeFormat: 'HH:MM:SS' }); // returns '12:30:45'
 ```
 
 ### Formatting Date and Time Together
@@ -58,14 +60,14 @@ If you need to format both date and time together, you can use the `format` meth
 
 ```javascript
 // Format the current date and time in the default formats (DD/MM/YYYY HH:MM:SS)
-const formattedDateTime = DateTimeFormatter.format();
+const formattedDateTime = DateTimeFormatter.format(); // returns '5/3/2024 12:30:45'
 ```
 
 You can specify custom formats for both date and time:
 
 ```javascript
 // Format the current date and time in custom formats (YYYY-MM-DD HH:MM)
-const formattedDateTime = DateTimeFormatter.format({ dateFormat: 'YYYY-MM-DD', timeFormat: 'HH:MM' });
+const formattedDateTime = DateTimeFormatter.format({ dateFormat: 'YYYY-MM-DD', timeFormat: 'HH:MM' }); // returns '2024/5/3 12:30'
 ```
 
 ### Additional Options

@@ -24,7 +24,7 @@ export class DateTimeFormatter {
     const dateSectionArray: string[] = []
 
     dateFormatStringArray.forEach(dateString => {
-      switch(dateString.toUpperCase()) {
+      switch (dateString.toUpperCase()) {
         case "YYYY":
           dateSectionArray.push(prefixZero ? padZero(fullYear) : (fullYear).toString());
           break;
@@ -41,14 +41,14 @@ export class DateTimeFormatter {
           dateSectionArray.push(prefixZero ? padZero(day) : (day).toString());
           break;
         default:
-          if (!["YYYY","YY", "MMMM", "MM", "DD"].includes(dateString.toUpperCase())) {
+          if (!["YYYY", "YY", "MMMM", "MM", "DD"].includes(dateString.toUpperCase())) {
             throw new Error(`Invalid format specifier: ${dateString}`);
-        }
+          }
       }
     });
     return dateSectionArray
   }
-  
+
   private static formatTime(timeFormatStringArray: string[], timestamp?: string, prefixZero?: boolean): string[] {
     /**
      * Returns a string[] containing the formatted time
@@ -64,12 +64,12 @@ export class DateTimeFormatter {
     const timeSectionArray: string[] = []
 
     timeFormatStringArray.forEach(timeString => {
-      switch(timeString.toLowerCase()) {
+      switch (timeString.toLowerCase()) {
         case "hh":
           timeSectionArray.push(prefixZero ? padZero(hours) : (hours).toString())
           break;
         case "mm":
-          timeSectionArray.push(prefixZero ? padZero(minutes): (minutes).toString())
+          timeSectionArray.push(prefixZero ? padZero(minutes) : (minutes).toString())
           break;
         case "ss":
           timeSectionArray.push(prefixZero ? padZero(seconds) : (seconds).toString())
@@ -77,12 +77,12 @@ export class DateTimeFormatter {
         default:
           if (!["hh", "mm", "ss"].includes(timeString.toLowerCase())) {
             throw new Error(`Invalid format specifier: ${timeString}`);
-        }
+          }
       }
     });
     return timeSectionArray
   }
-  
+
   static date(options?: { dateFormat?: string; timestamp?: string; prefixZero?: boolean }) {
     /**
      * Returns a formatted date string
@@ -111,7 +111,7 @@ export class DateTimeFormatter {
     return `${prefixZero ? padZero(datetime.getDate()) : datetime.getDate()}/${prefixZero ? padZero(datetime.getMonth() + 1) : datetime.getMonth() + 1}/${datetime.getFullYear()}`;
   }
 
-  static time(options?: {timeFormat?: string, timestamp?: string, prefixZero?: boolean}) {
+  static time(options?: { timeFormat?: string, timestamp?: string, prefixZero?: boolean }) {
     /**
      * Returns a formatted time string
      * @param timeFormat The format for the time (optional).
@@ -134,24 +134,27 @@ export class DateTimeFormatter {
       if (timeSectionArray.length < 2 || timeSectionArray.length > 3) {
         throw new Error(`Invalid format specifier length: ${timeSectionArray.length}, expected 2 or 3`);
       }
-        
-      return timeSectionArray.length === 3 ? `${timeSectionArray[0]}:${timeSectionArray[1]}:${timeSectionArray[2]}` : `${timeSectionArray[0]}:${timeSectionArray[1]}`
+
+      return timeSectionArray.length === 3 ? `${timeSectionArray[0]}:${timeSectionArray[1]}:${timeSectionArray[2]}` : `${timeSectionArray[0]}:${timeSectionArray[1]}`;
     }
-    return `${prefixZero ? padZero(datetime.getHours()) : datetime.getHours()}:${prefixZero ? padZero(datetime.getMinutes()) : datetime.getMinutes()}:${prefixZero ? padZero(datetime.getSeconds()) : datetime.getSeconds()}`
+    return `${prefixZero ? padZero(datetime.getHours()) : datetime.getHours()}:${prefixZero ? padZero(datetime.getMinutes()) : datetime.getMinutes()}:${prefixZero ? padZero(datetime.getSeconds()) : datetime.getSeconds()}`;
   }
 
-  static format(options: { dateFormat: string, timeFormat?: string, timestamp?: string, prefixZero?: boolean }) {
+  static format(options?: { dateFormat?: string, timeFormat?: string, timestamp?: string, prefixZero?: boolean }) {
     /**
      * Returns a formatted date or date-time string
      * @param dateFormat The format for the date.
-     * @param timeFormat The format for the time (optional).
+     * @param timeFormat The format for the time.
      * @param timestamp An optional 'Date | string | number' date-string argument for date-time (optional).
      * @param prefixZero An optional boolean value to toogle the prefixing of '0' before a single digit (optional).
     */
 
+    options = options || {};
     const { dateFormat, timeFormat, timestamp, prefixZero } = options;
-    let timeLiteral: string = ""
-    let dateLiteral: string = ""
+    const datetime = timestamp ? new Date(timestamp) : new Date()
+
+    let timeLiteral: string = "";
+    let dateLiteral: string = "";
 
     if (dateFormat) {
       let dateFormatStringArray: string[] = []
@@ -167,7 +170,7 @@ export class DateTimeFormatter {
       }
       dateLiteral = `${dateSectionArray[0]}/${dateSectionArray[1]}/${dateSectionArray[2]}`
     } else {
-      throw new Error("Expected a date string format")
+      dateLiteral = `${prefixZero ? padZero(datetime.getDate()) : datetime.getDate()}/${prefixZero ? padZero(datetime.getMonth() + 1) : datetime.getMonth() + 1}/${datetime.getFullYear()}`;
     }
 
     if (timeFormat) {
@@ -182,14 +185,12 @@ export class DateTimeFormatter {
       if (timeSectionArray.length < 2 || timeSectionArray.length > 3) {
         throw new Error(`Invalid format specifier length: ${timeSectionArray.length}, expected 2 or 3`);
       }
-        
+
       timeLiteral = timeSectionArray.length === 3 ? `${timeSectionArray[0]}:${timeSectionArray[1]}:${timeSectionArray[2]}` : `${timeSectionArray[0]}:${timeSectionArray[1]}`
+    } else {
+      timeLiteral = `${prefixZero ? padZero(datetime.getHours()) : datetime.getHours()}:${prefixZero ? padZero(datetime.getMinutes()) : datetime.getMinutes()}:${prefixZero ? padZero(datetime.getSeconds()) : datetime.getSeconds()}`;
     }
 
-    let formattedDateTime: string = ""
-    if (dateLiteral) {
-      formattedDateTime = timeLiteral ? dateLiteral + " " + timeLiteral : dateLiteral
-    }
-    return formattedDateTime
+    return dateLiteral + " " + timeLiteral
   }
 }
