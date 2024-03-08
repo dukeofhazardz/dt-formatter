@@ -14,6 +14,9 @@
     "type": "git",
     "url": "git+https://github.com/dukeofhazardz/dt-formatter.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },  
   "author": "Nnaemeka Daniel John",
   "license": "MIT",
   "files": ["dist", "LICENSE", "README.md", "package.json"],
