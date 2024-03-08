@@ -17,7 +17,7 @@ npm install dt-formatter
 ### Importing
 
 ```javascript
-import { DateTimeFormatter } from 'dt-formatter';
+const { DateTimeFormatter } = require("dt-formatter");
 ```
 
 ### Formatting Dates
